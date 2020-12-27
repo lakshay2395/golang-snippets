@@ -41,11 +41,11 @@ func repeat(ctx context.Context, dataStream <-chan int) <-chan int {
 
 func main() {
 	ctx := context.Background()
-	stream := generator(ctx)
-	ctx2, fn := context.WithTimeout(ctx, 5*time.Second)
+	ctx2, cancel := context.WithTimeout(ctx, 5*time.Second)
+	stream := generator(ctx2)
 	result := repeat(ctx2, stream)
 	for r := range result {
 		fmt.Println("r = ", r)
-		fn()
+		cancel()
 	}
 }
